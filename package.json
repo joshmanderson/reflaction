@@ -1,14 +1,8 @@
 {
   "name": "reflaction",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React state management using the flux pattern",
-  "keywords": [
-    "react",
-    "state",
-    "flux",
-    "store",
-    "dispatch"
-  ],
+  "keywords": ["react", "state", "flux", "store", "dispatch"],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
