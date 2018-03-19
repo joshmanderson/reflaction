@@ -49,7 +49,7 @@ export default class ReflactionProvider extends React.Component {
 
     if (handlers && handlers.length > 0) {
       let newState = this.state;
-      handlers.forEach(handler => (newState = handler(this.state, payload)));
+      handlers.forEach(handler => (newState = handler(newState, payload)));
       this.setState(newState);
     } else {
       console.error('There are no handlers for action type:', type);
