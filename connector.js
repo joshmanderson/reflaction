@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function connectComponentToStore(wrappedComponent) {
-  class StoreConnector extends React.Component {
+export function connectToReflaction(wrappedComponent) {
+  class ReflactionConnector extends React.Component {
     render() {
       return React.createElement(
         wrappedComponent,
@@ -15,11 +15,11 @@ export function connectComponentToStore(wrappedComponent) {
     }
   }
 
-  StoreConnector.contextTypes = {
+  ReflactionConnector.contextTypes = {
     store: PropTypes.any,
     dispatchAction: PropTypes.func,
     triggerActionFlow: PropTypes.func,
   };
 
-  return StoreConnector;
+  return ReflactionConnector;
 }

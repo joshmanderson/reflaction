@@ -1,4 +1,4 @@
-import StoreProvider from './StoreProvider';
-import { connectComponentToStore } from './connector';
+import ReflactionProvider from './ReflactionProvider';
+import { connectToReflaction } from './connector';
 
-export { StoreProvider, connectComponentToStore };
+export { ReflactionProvider, connectToReflaction };

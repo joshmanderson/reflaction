@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default class StoreProvider extends React.Component {
+export default class ReflactionProvider extends React.Component {
   constructor(props, context) {
     super(props, context);
 
@@ -52,7 +52,7 @@ export default class StoreProvider extends React.Component {
       handlers.forEach(handler => (newState = handler(this.state, payload)));
       this.setState(newState);
     } else {
-      console.error('\nThere are no handlers for action type:', type);
+      console.error('There are no handlers for action type:', type);
     }
   }
 
@@ -62,18 +62,18 @@ export default class StoreProvider extends React.Component {
     if (actionFlow) {
       actionFlow(this.dispatchAction, payload);
     } else {
-      console.error('\nThere is no action flow with name:', flowName);
+      console.error('There is no action flow with name:', flowName);
     }
   }
 }
 
-StoreProvider.propTypes = {
+ReflactionProvider.propTypes = {
   initialState: PropTypes.any.isRequired,
   actionHandlers: PropTypes.any.isRequired,
   actionFlows: PropTypes.any.isRequired,
   children: PropTypes.element.isRequired,
 };
-StoreProvider.childContextTypes = {
+ReflactionProvider.childContextTypes = {
   store: PropTypes.any,
   dispatchAction: PropTypes.func,
   triggerActionFlow: PropTypes.func,
