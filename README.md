@@ -56,7 +56,7 @@ const actionHandlers = {
 export default actionHandlers;
 ```
 
-Note that you can define many of these objects, perhaps each one related to a different part of the store. Also note that you may define handlers for the same action across these different objects.
+Note that you can define many of these objects, perhaps each one related to a different part of the store. Also note that you may define handlers for the same action type across different action handler objects.
 
 ## actionFlows.js
 
