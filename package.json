@@ -1,6 +1,6 @@
 {
   "name": "reflaction",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "React state management using the flux pattern",
   "keywords": ["react", "state", "flux", "store", "dispatch"],
   "main": "index.js",
