@@ -103,7 +103,7 @@ import actionFlows from './actionFlows';
 
 const initialState = { todosFetching: false, todos: [] };
 
-const logger = (nextMiddleware, getState) => action => {
+const logger = (nextMiddleware, getState, dispatchAction) => action => {
   console.group(action.type);
   console.log('Dispatched with payload:', action.payload);
   console.log('Old state:', getState());
@@ -130,7 +130,9 @@ registerServiceWorker();
 
 Note that you can also provide an array as the `actionHandlers` prop, if you have split up your action handlers (perhaps based on which part of the store they affect) – this is what allows you to have multiple handlers for the same action.
 
-Also note that you can define your initial state object wherever you want, you can even split it up into multiple objects (perhaps storing each within an associated action handlers file if you decided to split up your action handlers as well) and then combine the parts together when providing the `initialState` prop here.
+Also, you can define your initial state object wherever you want, you can even split it up into multiple objects (perhaps storing each within an associated action handlers file if you decided to split up your action handlers as well) and then combine the parts together when providing the `initialState` prop here.
+
+In the above code, we have an example of a middleware function: `logger`. Middleware functions are 'curried' functions, consisting of an inner and outer function. The inner function receives the action that was dispatched and contains logic that the middleware performs. The outer function receives the next middleware in the chain (`nextMiddleware`), which should be called once the current middleware logic has been performed, a function (`getState`) allowing the middleware to retrieve the current state (before action handling), and also a function allowing the middleware to dispatch a different action (`dispatchAction`), separate to the current chain of processing. Note that while not required, it is best to always return the result of `nextMiddleware` (which, down the chain, will eventually be set to the new state by the action handlers), for better compatability between different middleware functions.
 
 ## App.js
 

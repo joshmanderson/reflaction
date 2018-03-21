@@ -94,7 +94,12 @@ export default class ReflactionProvider extends React.Component {
     allMiddleware
       .concat()
       .reverse()
-      .forEach(middleware => (next = middleware(next, this.getState)));
+      .forEach(
+        middleware =>
+          (next = middleware(next, this.getState, action =>
+            this.dispatchAction(action)
+          ))
+      );
 
     this.dispatchAction = next;
   }
