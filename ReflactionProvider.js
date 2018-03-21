@@ -5,15 +5,31 @@ export default class ReflactionProvider extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = props.initialState || {};
+    this.bindFunctions();
 
-    this.actionHandlers = {};
-    this.addActionHandlers(props.actionHandlers || {});
+    this.initialiseState(props.initialState);
+    this.initialiseActionHandlers(props.actionHandlers);
+    this.initialiseActionFlows(props.actionFlows);
+    this.initialiseDispatcher(props.actionMiddleware);
+  }
 
-    this.actionFlows = props.actionFlows || {};
-
-    this.dispatchAction = this.dispatchAction.bind(this);
+  bindFunctions() {
+    this.handleAction = this.handleAction.bind(this);
     this.triggerActionFlow = this.triggerActionFlow.bind(this);
+    this.getState = this.getState.bind(this);
+  }
+
+  initialiseState(initialState) {
+    this.state = initialState || {};
+  }
+
+  initialiseActionHandlers(actionHandlers) {
+    this.actionHandlers = {};
+    this.addActionHandlers(actionHandlers || {});
+  }
+
+  initialiseActionFlows(actionFlows) {
+    this.actionFlows = actionFlows || {};
   }
 
   addActionHandlers(actionHandlers) {
@@ -44,16 +60,43 @@ export default class ReflactionProvider extends React.Component {
     return React.Children.only(this.props.children);
   }
 
-  dispatchAction(type, payload) {
-    const handlers = this.actionHandlers[type];
+  getState() {
+    return this.state;
+  }
+
+  handleAction(action) {
+    const handlers = this.actionHandlers[action.type];
 
     if (handlers && handlers.length > 0) {
       let newState = this.state;
-      handlers.forEach(handler => (newState = handler(newState, payload)));
+      handlers.forEach(
+        handler => (newState = handler(newState, action.payload))
+      );
       this.setState(newState);
+
+      return newState;
     } else {
-      console.error('There are no handlers for action type:', type);
+      console.error('There are no handlers for action type:', action.type);
+      return this.state;
     }
+  }
+
+  initialiseDispatcher(middleware) {
+    this.dispatchAction = this.handleAction;
+
+    if (middleware && middleware.length > 0) {
+      this.applyMiddleware(middleware);
+    }
+  }
+
+  applyMiddleware(allMiddleware) {
+    let next = this.dispatchAction;
+    allMiddleware
+      .concat()
+      .reverse()
+      .forEach(middleware => (next = middleware(next, this.getState)));
+
+    this.dispatchAction = next;
   }
 
   triggerActionFlow(flowName, payload) {
@@ -68,10 +111,11 @@ export default class ReflactionProvider extends React.Component {
 }
 
 ReflactionProvider.propTypes = {
-  initialState: PropTypes.any.isRequired,
-  actionHandlers: PropTypes.any.isRequired,
-  actionFlows: PropTypes.any.isRequired,
-  children: PropTypes.element.isRequired,
+  initialState: PropTypes.any,
+  actionHandlers: PropTypes.any,
+  actionFlows: PropTypes.any,
+  actionMiddleware: PropTypes.any,
+  children: PropTypes.element,
 };
 ReflactionProvider.childContextTypes = {
   store: PropTypes.any,

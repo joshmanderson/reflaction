@@ -24,15 +24,23 @@ State shared between components within the application.
 
 ## Action
 
-Something which can be 'dispatched' (read: triggered) by a component which will be handled by a developer defined function (or functions), resulting in an update to the store.
+Something which can be 'dispatched' (read: triggered) by a component which will be handled by a developer defined function (or functions), resulting in an update to the store. An action has a `type` and a `payload`.
+
+## Action Handler
+
+A user defined function which handles a specific action. Action handlers receive the current store and the action payload, and should return the new store for updating.
 
 ## Action Flow
 
 A flow of logic which can be triggered by a component, which results in the dispatching of multiple actions – for example, an asynchronous network call to fetch data, where different actions are dispatched along the way to track progress (pending, fulfilled, rejected etc.).
 
+## Action Middleware
+
+User or third party defined functions, which are run when an action is dispatched, before it is handled by the action handlers. Middleware functions can be used to intercept and modify actions before they are handled, or perform helpful tasks such as logging.
+
 ## Provider
 
-Provides access to reflaction functionality for descendent components (access to the store, ability to dispatch actions and trigger action flows).
+Provides access to reflaction functionality for descendent components (access to the store, ability to dispatch actions and trigger action flows). Also note that almost all functionality within reflaction is handled by the Provider, including initialisation, action dispatching and action flow triggering.
 
 # Example
 
@@ -65,7 +73,7 @@ Like action handlers, action flows are also stored in an object. The keys are th
 ```
 const actionFlows = {
   fetchTodos: async (dispatchAction, waitTime) => {
-    dispatchAction('fetchTodosPending');
+    dispatchAction({ type: 'fetchTodosPending' });
 
     const todos = await new Promise((resolve, reject) => {
       setTimeout(() => {
@@ -73,7 +81,7 @@ const actionFlows = {
       }, waitTime);
     });
 
-    dispatchAction('fetchTodosFulfilled', todos);
+    dispatchAction({ type: 'fetchTodosFulfilled', payload: todos });
   },
 };
 
@@ -95,11 +103,23 @@ import actionFlows from './actionFlows';
 
 const initialState = { todosFetching: false, todos: [] };
 
+const logger = (nextMiddleware, getState) => action => {
+  console.group(action.type);
+  console.log('Dispatched with payload:', action.payload);
+  console.log('Old state:', getState());
+
+  const newState = nextMiddleware(action);
+
+  console.log('New state:', newState);
+  console.groupEnd(action.type);
+};
+
 ReactDOM.render(
   <ReflactionProvider
     initialState={initialState}
     actionHandlers={actionHandlers}
     actionFlows={actionFlows}
+    actionMiddleware={[logger]}
   >
     <App />
   </ReflactionProvider>,
