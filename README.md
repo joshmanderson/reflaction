@@ -165,11 +165,11 @@ import { connectToReflaction } from 'reflaction';
 
 class TodoList extends React.Component {
   componentDidMount() {
-    this.props.triggerActionFlow('fetchTodos', 1000);
+    this.props.fetchTodos(1000);
   }
 
   render() {
-    const { todosFetching, todos } = this.props.store;
+    const { todosFetching, todos } = this.props;
 
     return todosFetching ? (
       <p>Loading todos...</p>
@@ -179,7 +179,15 @@ class TodoList extends React.Component {
   }
 }
 
-export default connectToReflaction(TodoList);
+export default connectToReflaction(
+  TodoList,
+  ({ store, triggerActionFlow }) => ({
+    fetchTodos: (...args) => triggerActionFlow('fetchTodos', ...args),
+    todosFetching: store.todosFetching,
+    todos: store.todos,
+  })
+);
 ```
 
+The `connectToReflaction` function takes the component to connect as well as a mapper function, which maps the props provided by reflaction (`store`, `dispatchAction` and `triggerActionFlow`) into the props that the connected component will receive.
 Note that you can connect pure functional components in the same way as we have connected the above component.
