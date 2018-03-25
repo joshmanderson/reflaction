@@ -48,7 +48,7 @@ Provides access to reflaction functionality for descendent components (access to
 
 Action handlers are stored in an object where the keys are the action types/names and the values are the handler functions. These functions receive the current state and the action payload (if any), and should return the new state.
 
-```
+```js
 const actionHandlers = {
   fetchTodosPending: state => ({
     ...state,
@@ -70,7 +70,7 @@ Note that you can define many of these objects, perhaps each one related to a di
 
 Like action handlers, action flows are also stored in an object. The keys are the flow names and the values are the flow functions. The flow functions take the `dispatchAction` function and also a flow payload (if any).
 
-```
+```js
 const actionFlows = {
   fetchTodos: async (dispatchAction, waitTime) => {
     dispatchAction({ type: 'fetchTodosPending' });
@@ -92,7 +92,7 @@ Note that the `fetchTodos` flow above makes use of `async` and `await`. You coul
 
 ## index.js
 
-```
+```js
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -138,16 +138,14 @@ In the above code, we have an example of a middleware function: `logger`. Middle
 
 There's nothing special about this file. It's just a basic component.
 
-```
+```js
 import React from 'react';
 
 import TodoList from './TodoList';
 
 class App extends React.Component {
   render() {
-    return (
-        <TodoList />
-    );
+    return <TodoList />;
   }
 }
 
@@ -158,7 +156,7 @@ export default App;
 
 This component is connected to reflaction. It can access the store, dispatch actions and trigger action flows. In this example, when the component is mounted we'll trigger the `fetchTodos` action flow with a payload (in this example the payload is a millsecond value indicating how long we want our mock function to wait before returning the todos).
 
-```
+```js
 import React from 'react';
 
 import { connectToReflaction } from 'reflaction';
