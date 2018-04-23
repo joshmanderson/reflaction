@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import hoistNonReactStatics from 'hoist-non-react-statics';
 
 export function connectToReflaction(wrappedComponent, mapReflactionToProps) {
   if (!mapReflactionToProps || typeof mapReflactionToProps !== 'function') {
@@ -29,5 +30,15 @@ export function connectToReflaction(wrappedComponent, mapReflactionToProps) {
     triggerActionFlow: PropTypes.func,
   };
 
+  ReflactionConnector.displayName = `Connected(${getDisplayName(
+    wrappedComponent
+  )})`;
+
+  hoistNonReactStatics(ReflactionConnector, wrappedComponent);
+
   return ReflactionConnector;
+}
+
+function getDisplayName(wrappedComponent) {
+  return wrappedComponent.displayName || wrappedComponent.name || 'Component';
 }
