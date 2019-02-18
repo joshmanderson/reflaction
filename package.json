@@ -1,6 +1,6 @@
 {
   "name": "reflaction",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "React state management using the flux pattern",
   "keywords": [
     "react",
@@ -12,9 +12,11 @@
     "connect",
     "provider"
   ],
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel src -d build",
+    "build:clean": "rm -rf build",
+    "prepublishOnly": "npm run build:clean && npm run build"
   },
   "repository": {
     "type": "git",
@@ -28,7 +30,25 @@
   "homepage": "https://github.com/joshmanderson/reflaction#readme",
   "dependencies": {
     "hoist-non-react-statics": "^2.5.0",
-    "prop-types": "^15.6.1",
+    "prop-types": "^15.6.1"
+  },
+  "peerDependencies": {
     "react": "^16.2.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "react": "^16.2.0"
+  },
+  "babel": {
+    "presets": [
+      "react",
+      "env"
+    ],
+    "plugins": [
+      "transform-class-properties"
+    ]
   }
 }
